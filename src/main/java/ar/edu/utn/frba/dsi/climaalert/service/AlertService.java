@@ -4,8 +4,8 @@ import ar.edu.utn.frba.dsi.climaalert.model.WeatherData;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -48,7 +48,7 @@ public class AlertService {
 	private String buildSubject(WeatherData data) {
 		return String.format("ALERTA CLIMATICA - %s - %s",
 				data.getLocation(),
-				data.getRegisterdAt().format(FORMATTER));
+				data.getRegisteredAt().format(FORMATTER));
 	}
 
 	private String buildBody(WeatherData data) {
@@ -74,7 +74,7 @@ public class AlertService {
 				 No responda a este correo
 				""",
 				data.getLocation(),
-				data.getRegisterdAt().format(FORMATTER),
+				data.getRegisteredAt().format(FORMATTER),
 				data.getTemperatureCelsius(),
 				data.getFeelsLikeCelsius() != null ? data.getFeelsLikeCelsius() : 0.0,
 				data.getHumidity(), //TODO cambiar

@@ -1,13 +1,21 @@
 package ar.edu.utn.frba.dsi.climaalert.client;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 // cliente rest para el endpoint
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
 public class WeatherApiClient {
 	private final RestTemplate restTemplate;
 
-	@value ("${weatherapi.base-url}")
+	@Value ("${weatherapi.base-url}")
 	private String baseUrl;
 
 	@Value("${weatherapi.api-key}")
@@ -19,7 +27,7 @@ public class WeatherApiClient {
 	//@return
 	//@throws WeatherApiException
 
-	public WeatherApiResponde getCurrentsBuilder() {
+	public WeatherApiResponse getCurrentWeather() {
 		String url = UriComponentsBuilder
 				.fromHttpUrl(baseUrl + "/current.json")
 				.queryParam("key", apiKey)
@@ -45,7 +53,9 @@ public class WeatherApiClient {
 	}
 
 		public static class WeatherApiClass extends RuntimeException {
-			public WeatherApiExeption(String message) {super (message); }
+			public WeatherApiExeption(String message) {
+				super (message);
+			}
 			public WeatherApiException(String message, Throwable cause) {
 				super(message, cause);
 			}
