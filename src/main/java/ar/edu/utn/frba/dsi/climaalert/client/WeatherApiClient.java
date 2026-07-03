@@ -29,7 +29,7 @@ public class WeatherApiClient {
 
 	public WeatherApiResponse getCurrentWeather() {
 		String url = UriComponentsBuilder
-				.fromHttpUrl(baseUrl + "/current.json")
+				.fromUriString(baseUrl + "/current.json")
 				.queryParam("key", apiKey)
 				.queryParam("q", location)
 				.queryParam("aqi", "no")
@@ -52,8 +52,8 @@ public class WeatherApiClient {
 		}
 	}
 
-		public static class WeatherApiClass extends RuntimeException {
-			public WeatherApiExeption(String message) {
+	public static class WeatherApiException extends RuntimeException {
+			public WeatherApiException(String message) {
 				super (message);
 			}
 			public WeatherApiException(String message, Throwable cause) {

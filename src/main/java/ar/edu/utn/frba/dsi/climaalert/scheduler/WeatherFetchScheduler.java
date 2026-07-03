@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dsi.climaalert.scheduler;
 
+import ar.edu.utn.frba.dsi.climaalert.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

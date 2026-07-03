@@ -31,7 +31,7 @@ public class AlertService {
 		log.warn("¡Condicion critica detectada! temperatura:{}°C, Humedad: {}%. Enviando alertas... ",
 				weatherData.getTemperatureCelsius(), weatherData.getHumidity());
 
-		simpleMailMessage message = new SimpleMailMessage();
+		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom(from);
 		message.setTo(recipients.toArray(new String[0]));
 		message.setSubject(buildSubject(weatherData));
@@ -61,14 +61,14 @@ public class AlertService {
 				 
 				 🌡️  DATOS CLIMÁTICOS ACTUALES
 				 ----------------------------------
-				 Temperatura: 
-				 Sensacion termica: 
-				 Humedad: 
-				 Condicion: 
-				 Viento: 
-				 Precipitacion:
-				 Nubosidad: 
-				 Indice UV: 
+				 Temperatura:	%.1f°C
+				 Sensacion termica:	%.1f°C	
+				 Humedad:	%.1f%%
+				 Condicion:	%s
+				 Viento:	%.1f km/h
+				 Precipitacion:	%.1f mm
+				 Nubosidad:	%d%%
+				 Indice UV:	%.1f
 				 ----------------------------------
 				 Este mensaje fue generado automaticamente por climalert 
 				 No responda a este correo
