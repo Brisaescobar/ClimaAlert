@@ -45,7 +45,7 @@ public class WeatherApiClient {
 			log.info("Los datos climaticos obtenidos para {}: {}C, humedad {}%",
 					location,
 					response.getCurrent().getTempC(),
-					response.getCurrent().getHumidity()); //TODO ver si puedo cambiar a humedad
+					response.getCurrent().getHumidity());
 			return response;
 		} catch (Exception e) {
 				throw new WeatherApiException ("Error al consultar weatherApi: " + e.getMessage(), e);

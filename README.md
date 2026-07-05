@@ -30,11 +30,14 @@ climáticas peligrosas o inusuales. En esta primera iteración se considera "ale
 ```
 client/      -> WeatherApiClient + DTOs de la respuesta de WeatherAPI
 config/      -> Configuración de beans (RestTemplate)
+diagramas/   -> Diagramas de secuencia de los dos flujos 
 model/       -> Entidad JPA WeatherData
 repository/  -> WeatherDataRepository (Spring Data JPA)
 service/     -> WeatherService (fetch + persistencia) y AlertService (envío de mails)
 scheduler/   -> WeatherFetchScheduler (cada 5 min) y AlertScheduler (cada 1 min)
 ```
+
+
 
 ## Requisitos
 
@@ -55,43 +58,45 @@ La aplicación lee credenciales desde variables de entorno (nunca se hardcodean 
 | `MAIL_USERNAME` | Usuario / remitente del correo |
 | `MAIL_PASSWORD` | Contraseña / contraseña de aplicación |
 
-Ejemplo de ejecución local:
+### Opción A — Correr desde terminal (bash / Git Bash)
+
+Creá un archivo `env.sh` (nunca lo subas al repo, agregalo a `.gitignore`) con:
 
 ```bash
 export WEATHERAPI_KEY=tu_api_key
 export MAIL_USERNAME=tu_correo@gmail.com
 export MAIL_PASSWORD=tu_app_password
+```
 
+> ⚠️ El `export` en cada línea es obligatorio. Sin él, la variable solo existe en la
+> terminal actual y **no se propaga** al proceso de Maven/Java, lo que produce el error
+> `Could not resolve placeholder 'WEATHERAPI_KEY'`.
+
+Y en la misma sesión de terminal (el `source` y el `run` deben ejecutarse sin cerrarla entre medio):
+
+```bash
+source env.sh
 ./mvnw spring-boot:run
+```
+
+### Opción B — Correr desde el botón ▶ de IntelliJ
+
+IntelliJ lanza un proceso propio que **no hereda** las variables exportadas en tu terminal, así que
+hay que cargarlas directamente en la Run Configuration:
+
+`Run → Edit Configurations... → ClimaAlertApplication → Environment variables` y agregar:
+
+```
+WEATHERAPI_KEY=tu_api_key;MAIL_USERNAME=tu_correo@gmail.com;MAIL_PASSWORD=tu_app_password
 ```
 
 La base de datos H2 se persiste en `./data/climalert.mv.db`. La consola H2 queda disponible en
 `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:file:./data/climalert`).
 
-## Cómo correr los tests
 
-```bash
-./mvnw test
-```
+## Decisiones de diseño 
+Link a docs con justificacion [Justificaciones-climalert](https://docs.google.com/document/d/1QmxJ-efW8wVBGQEfFQyhR2jRu1s8baqjaIb6pUa-bcc/edit?usp=drive_link)
 
-## Decisiones de diseño / supuestos
-
-- La ubicación se fija vía la propiedad `weatherapi.location` (consigna pide ubicación fija, ej. CABA).
-- `alertCondition` se calcula y persiste en el momento del fetch (no en el momento del análisis), de
-  forma que el scheduler de alertas solo lee el último registro y decide en base a un booleano ya
-  calculado.
-- Se usa H2 en modo archivo (no en memoria) para que el historial climático sobreviva reinicios,
-  acorde a "almacenarlos localmente para registro histórico".
-- Los destinatarios de alerta están fijos según la consigna, pero configurables vía
-  `alert.email.recipients` por si se necesitan ajustar en otro ambiente.
-
-## Pendientes / mejoras posibles (fuera del alcance de esta iteración)
-
-- Tests unitarios para `WeatherService` y `AlertService` (mockeando `RestTemplate` / `JavaMailSender`).
-- Manejo de reintentos ante fallos transitorios de WeatherAPI.
-- Traducción de `condition` (actualmente queda en inglés, tal como lo devuelve la API).
-- Soporte para múltiples ubicaciones.
-
-## Repositorio
-
-Link al repositorio público: **`https://github.com/Brisaescobar/ClimaAlert`**
+---
+## Autor 
+Escobar Brisa 

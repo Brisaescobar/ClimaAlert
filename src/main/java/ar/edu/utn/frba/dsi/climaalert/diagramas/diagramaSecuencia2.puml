@@ -1,15 +1,26 @@
 @startuml
-'https://plantuml.com/sequence-diagram
 
-autonumber
+participant AlertScheduler as S2
+participant WeatherService as WS
+participant WeatherDataRepository as REPO
+participant AlertService as AS
+participant "JavaMailSender (SMTP)" as MAIL
 
-== Initialization ==
+loop cada 1 minuto
+    S2 -> WS : getLatestWeatherData()
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+    WS -> REPO : findTopByOrderByRegisteredAtDesc()
+    REPO --> WS : Optional<WeatherData>
+    WS --> S2 : WeatherData (o vacío)
 
-== Repetition ==
+    alt alertCondition == true
+        S2 -> AS : sendAlert(weatherData)
+        AS -> MAIL : send(SimpleMailMessage)
+        MAIL --> AS : OK / error de envío
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+    else condiciones normales o sin datos
+        S2 -> S2 : log "Condiciones normales"\n/ "no hay datos"
+    end
+end
+
 @enduml
