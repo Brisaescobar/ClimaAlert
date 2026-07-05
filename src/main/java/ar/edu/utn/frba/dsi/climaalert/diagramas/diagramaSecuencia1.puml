@@ -1,0 +1,23 @@
+@startuml
+
+participant WeatherFetchScheduler as S1
+participant WeatherService as WS
+participant WeatherApiClient as WAC
+participant "WeatherAPI (externo)" as EXT
+participant WeatherDataRepository as REPO
+database "H2 (archivo)" as DB
+
+loop cada 5 minutos
+    S1 -> WS : fetchAndStore()
+    WS -> WAC : getCurrentWeather()
+    WAC -> EXT : GET /current.json?q=CABA&key=***
+    EXT --> WAC : JSON (temp_c, humidity,\ncondition, ...)
+    WAC --> WS : WeatherApiResponse
+
+    WS -> WS : calcula alertCondition\n(temp > 35 y humedad > 60)
+
+    WS -> REPO : save(WeatherData)
+    REPO -> DB : INSERT weather_data
+end
+
+@enduml
